@@ -1,0 +1,706 @@
+/* Reset & Basic Styles */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    color: #333; 
+    line-height: 1.6; 
+    background: #f4f7fa; 
+}
+
+/* Navbar Transparan dengan Blur + Ripple Effect */
+.navbar {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    background: rgba(255, 255, 255, 0.1); /* Transparan putih tipis */
+    backdrop-filter: blur(20px); /* Efek kaca buram (glassmorphism) */
+    -webkit-backdrop-filter: blur(20px); /* Support Safari */
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    padding: 12px 35px;
+    transition: all 0.4s ease;
+}
+
+.navbar-container {
+    display: flex;
+    align-items: center;
+    gap: 45px;
+    color: white;
+}
+
+.navbar .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;  /* Ukuran logo, sesuaikan kalau mau lebih besar/kecil */
+    height: 50px;
+    background: transparent; /* Hilangkan background putih kalau nggak perlu */
+    border-radius: 50%;
+    overflow: hidden; /* Biar gambar bulat rapi */
+    transition: all 0.4s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Biar gambar logo fill bulat tanpa distort */
+    border-radius: 50%;
+    transition: all 0.4s ease;
+}
+
+.navbar .logo:hover {
+    transform: rotate(360deg) scale(1.15);
+    box-shadow: 0 10px 30px rgba(187, 134, 252, 0.5); /* Glow ungu saat hover */
+}
+
+.navbar .logo:hover .logo-img {
+    transform: scale(1.1);
+}
+
+.nav-menu {
+    list-style: none;
+    display: flex;
+    gap: 35px;
+}
+
+.nav-link {
+    position: relative;
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    font-size: 1.05rem;
+    padding: 10px 16px;
+    border-radius: 30px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-3px);
+}
+
+/* Ripple Effect saat klik */
+.nav-link::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.nav-link:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+.nav-link span {
+    position: relative;
+    z-index: 1;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .navbar {
+        top: 10px;
+        padding: 10px 25px;
+        width: 95%;
+    }
+    .navbar-container { gap: 25px; }
+    .nav-menu { gap: 20px; }
+    .nav-link { font-size: 0.95rem; padding: 8px 12px; }
+    .nav-email { display: none; }
+}
+
+@media (max-width: 600px) {
+    .nav-menu { gap: 12px; }
+    .nav-link { font-size: 0.9rem; }
+}
+
+/* Hero / Homepage Background */
+.hero {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    z-index: 0;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(100, 0, 200, 0.85), rgba(50, 0, 100, 0.75), rgba(0, 0, 0, 0.95));
+    z-index: 1;
+}
+
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 0 20px;
+    max-width: 1200px;
+}
+/* Sections */
+section { padding: 100px 5%; }
+.section-title { text-align: center; font-size: 2.5rem; margin-bottom: 4rem; color: #4a6cff; }
+
+/* Swipe Carousel Gallery Glassmorphism - CSS Lengkap */
+.carousel-container {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.carousel-track {
+    display: flex;
+    width: 100%;
+    height: 500px;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carousel-slide {
+    min-width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+    transition: all 0.5s ease;
+    filter: brightness(0.7);
+}
+
+.carousel-slide.active {
+    filter: brightness(1);
+    transform: scale(1.02);
+}
+
+
+/* Dots Indicator */
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 25px 0;
+}
+
+.carousel-dots .dot {
+    width: 10px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(187, 134, 252, 0.4);
+}
+
+.carousel-dots .dot.active {
+    background: #bb86fc;
+    transform: scale(1.5);
+    box-shadow: 0 0 15px #bb86fc;
+}
+
+/* Tambah Ripple Effect ke Tombol (kalau mau) */
+.carousel-prev, .carousel-next {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .carousel-track { height: 380px; }
+    .carousel-prev, .carousel-next {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+    .carousel-prev { left: 15px; }
+    .carousel-next { right: 15px; }
+}
+
+
+
+/* Jadwal Card */
+.schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.schedule-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.4s ease;
+}
+.schedule-card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+.schedule-card .day { background: #4a6cff; color: white; padding: 20px; text-align: center; font-size: 1.5rem; }
+.schedule-card ul { padding: 20px; list-style: none; }
+.schedule-card ul li {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    transition: all 0.3s;
+}
+.schedule-card ul li:hover { color: #4a6cff; transform: translateX(10px); }
+
+/* Footer */
+footer {
+    background: #2d3436;
+    color: white;
+    padding: 50px 5% 20px;
+    text-align: center;
+}
+footer .social { margin: 20px 0; }
+footer .social a { color: white; font-size: 1.8rem; margin: 0 15px; transition: 0.3s; }
+footer .social a:hover { color: #4a6cff; transform: translateY(-5px); }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar ul { flex-direction: column; gap: 1rem; }
+    .hero h1 { font-size: 2.5rem; }
+}
+
+/* Background Global - Match dengan Homepage Ungu-Purple */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #eee; /* Teks jadi putih/abu biar keliatan di background gelap */
+    line-height: 1.6;
+    background: linear-gradient(to bottom, #2a003f, #0f001a); /* Ungu gelap ke hitam pekat */
+    min-height: 100vh;
+}
+
+/* Section lain biar blend mulus */
+section:not(.hero) {
+    padding: 100px 5%;
+    background: rgba(0, 0, 0, 0.4); /* Overlay hitam tipis biar card keliatan */
+    border-top: 1px solid rgba(150, 50, 255, 0.2); /* Garis tipis ungu buat pemisah */
+}
+
+/* Card-card (jadwal, tree, dll) biar glassmorphism match homepage */
+.schedule-card,
+.tree a,
+.link-card { /* Kalau masih pakai link-card dari hero */
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(150, 50, 255, 0.2);
+    color: white;
+}
+
+/* Section title match warna ungu */
+.section-title {
+    color: #bb86fc !important; /* Ungu soft */
+    text-shadow: 0 0 20px rgba(187, 134, 252, 0.5);
+}
+
+/* Footer match */
+footer {
+    background: rgba(0, 0, 0, 0.6);
+    border-top: 1px solid rgba(150, 50, 255, 0.3);
+}
+
+/* Ripple Effect Universal */
+.ripple {
+    position: relative;
+    overflow: hidden;
+    transform: translate3d(0, 0, 0); /* Hardware acceleration */
+}
+
+.ripple:after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    transform: scale(10, 10);
+    opacity: 0;
+    transition: transform .5s, opacity 1s;
+}
+
+.ripple:active:after {
+    transform: scale(0, 0);
+    opacity: .3;
+    transition: 0s;
+}
+
+/* Variasi warna ripple biar match tema ungu */
+.ripple-purple:after {
+    background-image: radial-gradient(circle, #bb86fc 10%, transparent 10.01%);
+}
+
+.ripple-light:after {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.6) 10%, transparent 10.01%);
+}
+
+/* Reveal On Scroll Animation */
+.reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Delay bertahap biar muncul satu per satu */
+.reveal:nth-child(1) { transition-delay: 0.1s; }
+.reveal:nth-child(2) { transition-delay: 0.2s; }
+.reveal:nth-child(3) { transition-delay: 0.3s; }
+.reveal:nth-child(4) { transition-delay: 0.4s; }
+.reveal:nth-child(5) { transition-delay: 0.5s; }
+/* Tambah lebih banyak kalau node lebih banyak */
+.reveal:nth-child(n+6) { transition-delay: 0.6s; }
+
+/* Struktur Organisasi Kelas - Simple Vertical Tree Glassmorphism */
+.simple-tree {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 40px 20px;
+}
+
+.tree-node {
+    background: rgba(255, 255, 255, 0.09);
+    backdrop-filter: blur(18px);
+    border: 2px solid rgba(187, 134, 252, 0.4);
+    border-radius: 28px;
+    padding: 25px 50px;
+    min-width: 260px;
+    text-align: center;
+    color: white;
+    font-size: 1.3rem;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    transition: all 0.5s ease;
+    opacity: 0;
+    transform: translateY(40px);
+}
+
+.tree-node strong {
+    display: block;
+    font-size: 1.4rem;
+    color: #bb86fc;
+    margin-bottom: 8px;
+    text-shadow: 0 0 15px rgba(187, 134, 252, 0.7);
+}
+
+.tree-node:hover {
+    transform: translateY(-15px) scale(1.08);
+    box-shadow: 0 30px 60px rgba(187, 134, 252, 0.5);
+    border-color: #bb86fc;
+}
+
+/* Garis penghubung vertikal glowing */
+.tree-line {
+    width: 6px;
+    height: 80px;
+    background: linear-gradient(to bottom, #bb86fc, transparent);
+    box-shadow: 0 0 25px #bb86fc;
+    border-radius: 15px;
+    opacity: 0;
+    transform: translateY(40px);
+}
+
+/* Responsif - Landscape lebih lebar */
+@media (orientation: landscape) {
+    .tree-node {
+        min-width: 300px;
+        padding: 30px 60px;
+        font-size: 1.5rem;
+    }
+    .tree-line { height: 100px; }
+}
+
+/* Reveal on Scroll (pastikan script sudah ada) */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal:nth-child(odd) { transition-delay: 0.2s; }
+.reveal:nth-child(even) { transition-delay: 0.4s; }
+
+.schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.flip-card {
+    background: transparent;
+    width: 100%;
+    height: 400px;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transform-style: preserve-3d;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    border-radius: 28px;
+}
+
+.flip-card:hover .flip-card-inner,
+.flip-card:active .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(187, 134, 252, 0.4);
+    border-radius: 28px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.flip-card-front {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.flip-card-back {
+    transform: rotateY(180deg);
+    background: rgba(187, 134, 252, 0.15);
+}
+
+.flip-card-front h3, .flip-card-back h3 {
+    font-size: 2.2rem;
+    margin-bottom: 30px;
+    color: #bb86fc;
+    text-shadow: 0 0 20px rgba(187, 134, 252, 0.8);
+}
+
+.flip-card-front ul {
+    list-style: none;
+    font-size: 1.4rem;
+    line-height: 2.2;
+}
+
+.flip-card-back p {
+    font-size: 1.2rem;
+    margin: 15px 0;
+    line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+    .flip-card {
+        height: 350px;
+    }
+    .flip-card-front h3, .flip-card-back h3 {
+        font-size: 2rem;
+    }
+    .flip-card-front ul, .flip-card-back p {
+        font-size: 1.2rem;
+    }
+}
+
+@media (orientation: landscape) {
+    .schedule-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 50px;
+    }
+}
+
+/* Chat Anonim Modal - Animasi Slide Up + Glass */
+.chat-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.chat-modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.chat-content {
+    width: 100%;
+    max-width: 500px;
+    background: linear-gradient(to top, #1a0033, #2d1b69);
+    backdrop-filter: blur(20px);
+    border-radius: 30px 30px 0 0;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -20px 60px rgba(187, 134, 252, 0.4);
+    transform: translateY(100%);
+    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.chat-modal.show .chat-content {
+    transform: translateY(0);
+}
+
+.chat-header {
+    padding: 20px;
+    text-align: center;
+    color: #bb86fc;
+    font-size: 1.6rem;
+    border-bottom: 1px solid rgba(187, 134, 252, 0.3);
+    position: relative;
+}
+
+.close-chat {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 2.2rem;
+    cursor: pointer;
+    color: white;
+    transition: 0.3s;
+}
+
+.close-chat:hover {
+    color: #ff6b6b;
+    transform: rotate(90deg);
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.no-message {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+}
+
+.message {
+    align-self: flex-start;
+    background: rgba(187, 134, 252, 0.25);
+    padding: 15px 20px;
+    border-radius: 20px;
+    max-width: 85%;
+    color: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: messageIn 0.4s ease;
+}
+
+.message strong {
+    display: block;
+    font-size: 0.9rem;
+    color: #bb86fc;
+    margin-bottom: 5px;
+}
+
+.chat-input {
+    display: flex;
+    padding: 20px;
+    gap: 12px;
+    border-top: 1px solid rgba(187, 134, 252, 0.3);
+}
+
+#chat-input {
+    flex: 1;
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(187, 134, 252, 0.4);
+    border-radius: 30px;
+    color: white;
+    font-size: 1.1rem;
+}
+
+#chat-input::placeholder {
+    color: rgba(255,255,255,0.6);
+}
+
+#send-message {
+    padding: 16px 32px;
+    background: linear-gradient(to right, #bb86fc, #9d4edd);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#send-message:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(187, 134, 252, 0.6);
+}
+
+@keyframes messageIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Smooth Scroll untuk semua link anchor (#id) */
+html {
+    scroll-behavior: smooth;
+}
