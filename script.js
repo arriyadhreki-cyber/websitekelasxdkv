@@ -144,7 +144,23 @@ window.addEventListener('scroll', revealOnScroll);
 revealOnScroll(); // Init saat load
 
 
-// === CHAT ANONIM KELAS - FIX 100% (PASTI MUNCUL NORMAL) ===
+// === CHAT ANONIM GLOBAL REAL-TIME FIREBASE - FIX 100% ===
+const firebaseConfig = {
+  apiKey: "AIzaSyAenJKAlU7HZUS9DYciOol-PossbSoS4Kk",
+  authDomain: "chat-web-kelas.firebaseapp.com",
+  databaseURL: "https://chat-web-kelas-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "chat-web-kelas",
+  storageBucket: "chat-web-kelas.firebasestorage.app",
+  messagingSenderId: "71196549800",
+  appId: "1:71196549800:web:02935c4163882e7e89989d",
+  measurementId: "G-S1787EDBTB"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const chatRef = db.ref('messages');
+
 const chatModal = document.getElementById('chat-modal');
 const openChatBtn = document.getElementById('open-chat');
 const closeChatBtn = document.querySelector('.close-chat');
@@ -152,13 +168,11 @@ const chatMessages = document.getElementById('chat-messages');
 const chatInput = document.getElementById('chat-input');
 const sendBtn = document.getElementById('send-message');
 
-const STORAGE_KEY = 'anonChatKelas';
-
 if (chatModal && openChatBtn) {
     openChatBtn.addEventListener('click', (e) => {
         e.preventDefault();
         chatModal.classList.add('show');
-        loadMessages();
+        chatMessages.innerHTML = ''; // Kosongin dulu biar bersih
         chatInput.focus();
     });
 
@@ -172,46 +186,37 @@ if (chatModal && openChatBtn) {
         }
     });
 
+    // Kirim pesan
     const sendMessage = () => {
         const text = chatInput.value.trim();
         if (text === '') return;
 
-        let messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        messages.push({
+        chatRef.push({
             text: text,
             time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
         });
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
 
         chatInput.value = '';
-        loadMessages();
     };
 
     sendBtn.addEventListener('click', sendMessage);
     chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendMessage();
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
     });
 
-    // INI YANG DIPERBAIKI: PAKAI BACKTICK `` BIAR ${} JALAN
-    const loadMessages = () => {
-        chatMessages.innerHTML = '';
-        const messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-
-        if (messages.length === 0) {
-            chatMessages.innerHTML = '<p class="no-message">Belum ada pesan. Jadilah yang pertama!</p>';
-            return;
-        }
-
-        messages.forEach(msg => {
-            const div = document.createElement('div');
-            div.classList.add('message');
-            div.innerHTML = `
-                <strong>${msg.time}</strong><br>
-                ${msg.text}
-            `;
-            chatMessages.appendChild(div);
-        });
-
+    // Real-time listener - FIX RENDER PAKAI BACKTICK
+    chatRef.on('child_added', (snapshot) => {
+        const msg = snapshot.val();
+        const div = document.createElement('div');
+        div.classList.add('message');
+        // PAKAI BACKTICK `` BIAR ${} JALAN BENAR
+        div.innerHTML = `
+            <strong>${msg.time}</strong><br>
+            ${msg.text}
+        `;
+        chatMessages.appendChild(div);
         chatMessages.scrollTop = chatMessages.scrollHeight;
-    };
+    });
 }
